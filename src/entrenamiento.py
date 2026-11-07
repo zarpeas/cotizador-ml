@@ -1,8 +1,5 @@
 """
-entrenamiento.py - v14
-- Predice log(costo/kg_total) y reconstruye costo = exp(pred) × kg_total
-- Features basadas en la lógica del Excel (kg_total + n_componentes + tipo)
-- 5-fold CV repetido 3×
+entrenamiento.py 
 """
 from pathlib import Path
 import joblib, pandas as pd, numpy as np
@@ -131,7 +128,7 @@ def entrenar():
         print(f"  idx={idx:3d}  kg={row.kg_total:7.1f}  "
               f"real=${row.real:>9,.0f}  pred=${row.pred:>9,.0f}  err={row.err:5.1f}%")
 
-    # Reentrenar ganador sobre todo el dataset
+    
     y_log_full = df["costo_kg_log"].values
     clip_lo, clip_hi = np.percentile(y_log_full, [2, 98])
 

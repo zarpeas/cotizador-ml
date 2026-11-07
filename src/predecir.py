@@ -1,4 +1,4 @@
-"""predecir.py - v14"""
+"""predecir.py"""
 from pathlib import Path
 import joblib, numpy as np, pandas as pd, re
 
@@ -42,14 +42,14 @@ def predecir(d: dict) -> float:
     techo      = int(d.get("techo_inclinado", 0))
     divisiones = int(d.get("divisiones", 1))
 
-    # kg_total: el dato más importante. Si el usuario lo provee, usarlo.
+    
     if "kg_total" in d and d["kg_total"]:
         kg_total = float(d["kg_total"])
     else:
-        # Estimación por componentes (misma fórmula del Excel: 7.85e-6 kg/mm³)
+        
         alto = float(d["alto"]); ancho = float(d["ancho"]); fondo = float(d["fondo"])
         esp  = float(d["espesor"])
-        # Aproximación: kg = superficie_efectiva × espesor × 7.85e-6
+      
         sup = 2 * (alto*ancho + alto*fondo + ancho*fondo)  # cm² aprox
         kg_total = (sup * (esp/10) * 7.85e-6 * 100 +  # conversión cm²→mm²
                     bandejas * 2.5 + n_puertas_total * 3.5 +

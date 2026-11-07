@@ -1,9 +1,5 @@
 """
-limpieza.py - v14
-Estrategia basada en el Excel de costos real:
-  costo_total ≈ kg_acero × factor_proyecto (1500-2500 $/kg)
-  → predecir costo/kg_total en vez de costo absoluto
-Usa `kg_total` y `n_componentes` reales del dataset (no kg_est).
+limpieza.py 
 """
 from pathlib import Path
 import unicodedata, re
@@ -108,7 +104,6 @@ def limpiar():
     df.loc[df["costo_kg"] < 100, "costo_fabricacion"] *= 1000
     df["costo_kg"] = df["costo_fabricacion"] / df["kg_total"]
 
-    # Rango validado por el Excel: 800-5000 $/kg cubre todos los proyectos
     antes = len(df)
     df = df[(df.costo_kg >= 800) & (df.costo_kg <= 5000)]
     print(f"[INFO] Tras filtro costo/kg [800-5000]: {antes} → {len(df)}")
@@ -123,12 +118,10 @@ def limpiar():
     df["n_cuerpos_txt"]   = df["n_cuerpos_txt"].fillna(1).astype(int).clip(lower=1)
     df["n_puertas_total"] = df["n_puertas"] * df["n_cuerpos_txt"]
 
-    # n_componentes real: si existe usar el del dataset; sino aproximar
     if "n_componentes" not in df.columns:
         df["n_componentes"] = 10
     df["n_componentes"] = df["n_componentes"].fillna(10).astype(float)
 
-    # Un solo target: log(costo/kg_total)
     df["log_kg_total"] = np.log1p(df["kg_total"])
     df["costo_kg_log"] = np.log1p(df["costo_kg"])
     df["costo_log"]    = np.log1p(df["costo_fabricacion"])  # referencia
